@@ -1,0 +1,11 @@
+[workspace]
+members = [
+  "crates/coordinator",
+  "crates/rpc",
+  "crates/raft_node",
+  "crates/storage",
+  "crates/sql_parser",
+  "crates/metadata",
+  "crates/observability",
+  "crates/common"
+, "bin/coordinator", "bin/node"]

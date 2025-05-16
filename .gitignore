@@ -27,7 +27,6 @@ out/
 build
 dist
 
-
 # Debug
 npm-debug.log*
 yarn-debug.log*
@@ -36,3 +35,23 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Rust specific
+/target/
+**/target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+**/*.o
+**/*.so
+**/*.dylib
+**/*.dll
+**/*.exe
+**/*.d
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.vs/

@@ -1,14 +1,11 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! Common types and utilities for the distributed database system.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod error;
+pub mod types;
+pub mod config;
+pub mod util;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+// Re-export commonly used items
+pub use error::{DatabaseError, Result};
+pub use types::{KeyRange, PartitionInfo, NodeId, LogEntry};
+pub use config::{NodeConfig, CoordinatorConfig, load_config};

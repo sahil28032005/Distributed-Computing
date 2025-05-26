@@ -1,0 +1,74 @@
+syntax ="proto3";
+
+package node;
+
+// Node service for coordinator-to-node communication
+service NodeService {
+  // Write operation
+  rpc Write(WriteRequest) returns (WriteResponse);
+  
+  // Read operation
+  rpc Read(ReadRequest) returns (ReadResponse);
+  
+  // Scan operation
+  rpc Scan(ScanRequest) returns (ScanResponse);
+  
+  // Get node status
+  rpc GetStatus(StatusRequest) returns (StatusResponse);
+}
+
+// Write request
+message WriteRequest {
+  string key = 1;
+  bytes value = 2;
+}
+
+// Write response
+message WriteResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+// Read request
+message ReadRequest {
+  string key = 1;
+}
+
+// Read response
+message ReadResponse {
+  bool found = 1;
+  bytes value = 2;
+  string error = 3;
+}
+
+// Scan request
+message ScanRequest {
+  string start_key = 1;
+  string end_key = 2;
+  int32 limit = 3;
+}
+
+// Scan response
+message ScanResponse {
+  repeated KeyValue items = 1;
+  string error = 2;
+}
+
+// Key-value pair
+message KeyValue {
+  string key = 1;
+  bytes value = 2;
+}
+
+// Status request
+message StatusRequest {}
+
+// Status response
+message StatusResponse {
+  string node_id = 1;
+  string status = 2;
+  uint64 leader_term = 3;
+  string leader_id = 4;
+  uint64 last_applied_index = 5;
+  uint64 commit_index = 6;
+}

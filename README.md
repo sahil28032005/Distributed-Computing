@@ -18,8 +18,9 @@ MiceDB is a distributed database system designed for high performance, reliabili
 
 Just as mice are small but mighty creatures that work together in colonies, MiceDB nodes collaborate in a distributed environment to provide robust data storage and retrieval capabilities.
 
-🏗️ Architecture
+## 🏗️ Architecture
 
+```mermaid
 graph TD
     Client[Client Applications] --> Coordinator
     

@@ -1,84 +1,74 @@
-# Turborepo starter
+# 🐭 MiceDB v1
+A lightweight, distributed database system built with Rust and managed with Turborepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+## 📋 Table of Contents
+- Overview
+- Architecture
+- Features
+- Components
+- Getting Started
+- Usage Examples
+- Performance
+- Roadmap
+- Contributing
+- License
 
-## Using this example
+## 🔍 Overview
+MiceDB is a distributed database system designed for high performance, reliability, and scalability. Built with Rust for maximum efficiency and safety, MiceDB combines the power of a distributed key-value store with SQL capabilities, making it suitable for a wide range of applications.
 
-Run the following command:
+Just as mice are small but mighty creatures that work together in colonies, MiceDB nodes collaborate in a distributed environment to provide robust data storage and retrieval capabilities.
 
-```sh
-npx create-turbo@latest
-```
+🏗️ Architecture
 
-## What's inside?
+graph TD
+    Client[Client Applications] --> Coordinator
+    
+    subgraph Coordinator[Coordinator Node]
+        SQL[SQL Parser] --> QueryPlanner[Query Planner]
+        QueryPlanner --> MetadataManager[Metadata Manager]
+        MetadataManager --> Router[Request Router]
+    end
+    
+    subgraph DataNodes[Data Nodes]
+        Node1[Node 1] 
+        Node2[Node 2]
+        Node3[Node 3]
+    end
+    
+    Router --> Node1
+    Router --> Node2
+    Router --> Node3
+    
+    subgraph RaftConsensus[Raft Consensus Groups]
+        Raft1[Raft Group 1]
+        Raft2[Raft Group 2]
+    end
+    
+    Node1 --> Raft1
+    Node2 --> Raft1
+    Node1 --> Raft2
+    Node3 --> Raft2
+    
+    subgraph Storage[Storage Layer]
+        RocksDB1[RocksDB Instance 1]
+        RocksDB2[RocksDB Instance 2]
+        RocksDB3[RocksDB Instance 3]
+    end
+    
+    Node1 --> RocksDB1
+    Node2 --> RocksDB2
+    Node3 --> RocksDB3
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+    
+## 🚀 Features
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Distributed Architecture | Scale horizontally across multiple nodes | 🟡 In Progress |
+| SQL Interface | Support for SQL queries on distributed data | 🟡 In Progress |
+| Key-Value API | Simple KV operations for high-performance access | 🟢 Implemented |
+| Raft Consensus | Ensures data consistency across replicas | 🟡 In Progress |
+| Automatic Sharding | Data automatically distributed across nodes | 🔴 Planned |
+| Fault Tolerance | System continues operating despite node failures | 🟡 In Progress |
+| Observability | Metrics, tracing, and logging for system monitoring | 🟡 In Progress |
+| Snapshot & Recovery | Point-in-time snapshots and recovery capabilities | 🔴 Planned |
+ 

@@ -45,7 +45,7 @@ impl KeyRange {
 
     /// Check if a key is within this range.
     pub fn contains(&self, key: &str) -> bool {
-        key >= &self.start && key < &self.end
+        key >= self.start.as_str() && key < self.end.as_str() //needs to be properly derefernced otherwise crates errors
     }
 }
 

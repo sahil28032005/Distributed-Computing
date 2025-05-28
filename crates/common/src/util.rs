@@ -1,4 +1,5 @@
 //! Utility functions for the database system.
+#[allow(unused_imports)]
 
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use std::path::PathBuf;

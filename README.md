@@ -59,17 +59,3 @@ graph TD
     Node1 --> RocksDB1
     Node2 --> RocksDB2
     Node3 --> RocksDB3
-
-
-## 🚀 Features
-| Feature | Description | Status |
-|---------|-------------|--------|
-| Distributed Architecture | Scale horizontally across multiple nodes | 🟡 In Progress |
-| SQL Interface | Support for SQL queries on distributed data | 🟡 In Progress |
-| Key-Value API | Simple KV operations for high-performance access | 🟢 Implemented |
-| Raft Consensus | Ensures data consistency across replicas | 🟡 In Progress |
-| Automatic Sharding | Data automatically distributed across nodes | 🔴 Planned |
-| Fault Tolerance | System continues operating despite node failures | 🟡 In Progress |
-| Observability | Metrics, tracing, and logging for system monitoring | 🟡 In Progress |
-| Snapshot & Recovery | Point-in-time snapshots and recovery capabilities | 🔴 Planned |
- 

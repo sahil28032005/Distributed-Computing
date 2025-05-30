@@ -1,14 +1,23 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! RPC module for the distributed database system.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod proto {
+    // Include the generated code from the build script
+    pub mod database {
+        //this line pulls generated code from protobuff file
+        tonic::include_proto!("database");
+    }
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    pub mod node {
+        tonic::include_proto!("node");
+    }
+
+    pub mod raft {
+        tonic::include_proto!("raft");
     }
 }
+
+pub mod database_service;
+pub mod node_service;
+pub mod raft_service;
+pub mod client;
+        

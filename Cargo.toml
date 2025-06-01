@@ -1,4 +1,5 @@
 [workspace]
+resolver = "2"
 members = [
   "crates/coordinator",
   "crates/rpc",
@@ -7,5 +8,7 @@ members = [
   "crates/sql_parser",
   "crates/metadata",
   "crates/observability",
-  "crates/common"
-, "bin/coordinator", "bin/node"]
+  "crates/common",
+  "bin/coordinator",
+  "bin/node"
+]

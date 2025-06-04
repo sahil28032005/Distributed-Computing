@@ -5,7 +5,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use std::path::PathBuf;
 use crate::error::Result;
 use crate::types::NodeId;
-use log::{info, warn, error, debug};
+use log::info;
 
 /// Generate a timestamp in milliseconds.
 pub fn timestamp_ms() -> u64 {

@@ -3,7 +3,6 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::collections::HashMap;
-use uuid::Uuid;
 use chrono::{DateTime, Utc};
 
 /// A unique identifier for a node in the cluster.

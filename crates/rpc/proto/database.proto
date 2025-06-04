@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package database;
 
+import "google/protobuf/timestamp.proto";
+
 // Database service for client-to-coordinator communication
 service DatabaseService {
   // Execute a SQL query
@@ -100,4 +102,3 @@ message KeyValue {
   bytes value = 2;
 }
 
-import "google/protobuf/timestamp.proto";

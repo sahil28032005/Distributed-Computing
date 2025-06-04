@@ -1,7 +1,5 @@
 use common::error::Result;
 use std::vec::Vec;
-use std::collections::HashMap;
-use tokio::sync::Mutex;
 
 mod server;
 

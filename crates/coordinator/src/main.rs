@@ -14,7 +14,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     
     // Initialize the coordinator (if needed)
     {
-        let mut coord = coordinator.lock().await;
+        let coord = coordinator.lock().await;
         // You might want to load configuration here
         // coord.initialize("localhost:50051", "localhost:50052").await?;
     }

@@ -34,7 +34,7 @@ impl DatabaseService for DatabaseServiceImpl {
         &self,
         request: Request<QueryRequest>,
     ) -> Result<Response<QueryResponse>, Status> {
-        let _req = request.into_inner();
+        let req = request.into_inner();
         let mut coordinator = self.coordinator.lock().await;
 
         match coordinator.execute_query(req.query, req.parameters).await {
@@ -54,7 +54,7 @@ impl DatabaseService for DatabaseServiceImpl {
     }
 
     async fn get(&self, request: Request<GetRequest>) -> Result<Response<GetResponse>, Status> {
-        let _req = request.into_inner();
+        let req = request.into_inner();
         let mut coordinator = self.coordinator.lock().await;
         match coordinator.get(req.key).await {
             Ok(value) => Ok(Response::new(GetResponse {

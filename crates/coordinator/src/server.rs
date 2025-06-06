@@ -1,6 +1,9 @@
 use crate::Coordinator;
 use rpc::proto::database::database_service_server::{DatabaseService, DatabaseServiceServer};
-use rpc::proto::database::{GetRequest, GetResponse, QueryRequest, QueryResponse};
+use rpc::proto::database::{
+    DeleteRequest, DeleteResponse, GetRequest, GetResponse, PutRequest, PutResponse,
+    QueryRequest, QueryResponse, Row, ScanRequest, ScanResponse, Value,
+};
 use rpc::proto::node::node_service_server::{NodeService, NodeServiceServer};
 use rpc::proto::node::{
     ReadRequest, ReadResponse, StatusRequest, StatusResponse, WriteRequest, WriteResponse,
@@ -18,13 +21,24 @@ use tonic::{transport::Server, Status};
 
 // database service implementation
 pub struct DatabaseServiceImpl {
-    #[allow(dead_code)]
     coordinator: Arc<Mutex<Coordinator>>,
 }
 
 impl DatabaseServiceImpl {
     pub fn new(coordinator: Arc<Mutex<Coordinator>>) -> Self {
         Self { coordinator }
+    }
+
+    // Helper to convert a hashmap row to a protobuf Row
+    fn convert_to_proto_row(row: &std::collections::HashMap<String, String>) -> Row {
+        let values = row.iter().map(|(_, value)| {
+            // Simple conversion - in a real implementation, you'd determine the type
+            Value {
+                value: Some(rpc::proto::database::value::Value::StringValue(value.clone())),
+            }
+        }).collect();
+
+        Row { values }
     }
 }
 
@@ -38,12 +52,19 @@ impl DatabaseService for DatabaseServiceImpl {
         let mut coordinator = self.coordinator.lock().await;
 
         match coordinator.execute_query(req.query, req.parameters).await {
-            Ok(_) => Ok(Response::new(QueryResponse {
-                success: true,
-                error: "".to_string(),
-                rows: vec![],
-                affected_rows: 0,
-            })),
+            Ok(result_rows) => {
+                // Convert the result rows to protobuf format
+                let rows = result_rows.iter()
+                    .map(|row| Self::convert_to_proto_row(row))
+                    .collect();
+
+                Ok(Response::new(QueryResponse {
+                    success: true,
+                    error: "".to_string(),
+                    rows,
+                    affected_rows: result_rows.len() as u64,
+                }))
+            },
             Err(e) => Ok(Response::new(QueryResponse {
                 success: false,
                 error: e.to_string(),
@@ -72,25 +93,65 @@ impl DatabaseService for DatabaseServiceImpl {
 
     async fn put(
         &self,
-        request: Request<rpc::proto::database::PutRequest>,
-    ) -> Result<Response<rpc::proto::database::PutResponse>, Status> {
-        let req=request.into_inner();
-        todo!("Implement put")
+        request: Request<PutRequest>,
+    ) -> Result<Response<PutResponse>, Status> {
+        let req = request.into_inner();
+        let mut coordinator = self.coordinator.lock().await;
+        
+        match coordinator.put(req.key, req.value).await {
+            Ok(_) => Ok(Response::new(PutResponse {
+                success: true,
+                error: "".to_string(),
+            })),
+            Err(e) => Ok(Response::new(PutResponse {
+                success: false,
+                error: e.to_string(),
+            })),
+        }
+    }
+
+    async fn delete(
+        &self,
+        request: Request<DeleteRequest>,
+    ) -> Result<Response<DeleteResponse>, Status> {
+        let req = request.into_inner();
+        let mut coordinator = self.coordinator.lock().await;
+        
+        match coordinator.delete(req.key).await {
+            Ok(_) => Ok(Response::new(DeleteResponse {
+                success: true,
+                error: "".to_string(),
+            })),
+            Err(e) => Ok(Response::new(DeleteResponse {
+                success: false,
+                error: e.to_string(),
+            })),
+        }
     }
 
     async fn scan(
         &self,
-        request: Request<rpc::proto::database::ScanRequest>,
-    ) -> Result<Response<rpc::proto::database::ScanResponse>, Status> {
-        let req=request.into_inner();
-        todo!("Implement scan")
-    }
-    async fn delete(
-        &self,
-        request: Request<rpc::proto::database::DeleteRequest>,
-    ) -> Result<Response<rpc::proto::database::DeleteResponse>, Status> {
-        let req=request.into_inner();
-        todo!("Implement delete")
+        request: Request<ScanRequest>,
+    ) -> Result<Response<ScanResponse>, Status> {
+        let req = request.into_inner();
+        let mut coordinator = self.coordinator.lock().await;
+        
+        match coordinator.scan(req.start_key, req.end_key, req.limit).await {
+            Ok(items) => {
+                let proto_items = items.into_iter()
+                    .map(|(key, value)| rpc::proto::database::KeyValue { key, value })
+                    .collect();
+                
+                Ok(Response::new(ScanResponse {
+                    items: proto_items,
+                    error: "".to_string(),
+                }))
+            },
+            Err(e) => Ok(Response::new(ScanResponse {
+                items: vec![],
+                error: e.to_string(),
+            })),
+        }
     }
 }
 

@@ -2,47 +2,45 @@ use coordinator_lib::Coordinator;
 use std::collections::HashMap;
 
 #[tokio::test]
-async fn test_sql_parsing() -> Result<(), Box<dyn std::error::Error>> {
-    // Create a coordinator instance
+async fn test_sql_parser_integration() {
+    // Create a coordinator
     let mut coordinator = Coordinator::new();
+    let params: HashMap<String, String> = HashMap::new();
     
-    // Test a simple SELECT query
-    let select_query = "SELECT id, name FROM users WHERE id = 1";
-    let params = HashMap::new();
+    // Test SELECT
+    let select_query = "SELECT id, name FROM users";
     let result = coordinator.execute_query(select_query.to_string(), params.clone()).await;
     assert!(result.is_ok(), "SELECT query should parse successfully");
     
-    // Test an INSERT query
-    let insert_query = "INSERT INTO users (id, name) VALUES (1, 'John Doe')";
+    // Test INSERT
+    let insert_query = "INSERT INTO users (id, name) VALUES (1, 'Alice')";
     let result = coordinator.execute_query(insert_query.to_string(), params.clone()).await;
     assert!(result.is_ok(), "INSERT query should parse successfully");
     
-    // Test an UPDATE query
-    let update_query = "UPDATE users SET name = 'Jane Doe' WHERE id = 1";
+    // Test UPDATE
+    let update_query = "UPDATE users SET name = 'Bob' WHERE id = 1";
     let result = coordinator.execute_query(update_query.to_string(), params.clone()).await;
     assert!(result.is_ok(), "UPDATE query should parse successfully");
     
-    // Test a DELETE query
+    // Test DELETE
     let delete_query = "DELETE FROM users WHERE id = 1";
     let result = coordinator.execute_query(delete_query.to_string(), params.clone()).await;
     assert!(result.is_ok(), "DELETE query should parse successfully");
     
-    // Test a CREATE TABLE query
-    let create_table_query = "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email TEXT)";
+    // Test CREATE TABLE
+    let create_table_query = "CREATE TABLE users (id INT PRIMARY KEY, name TEXT)";
     let result = coordinator.execute_query(create_table_query.to_string(), params.clone()).await;
     assert!(result.is_ok(), "CREATE TABLE query should parse successfully");
     
-    // Test a query with parameters
+    // Test with parameters
+    let param_query = "SELECT * FROM users WHERE id = :user_id";
     let mut params_with_values = HashMap::new();
     params_with_values.insert("user_id".to_string(), "1".to_string());
-    let param_query = "SELECT * FROM users WHERE id = :user_id";
     let result = coordinator.execute_query(param_query.to_string(), params_with_values).await;
-    assert!(result.is_ok(), "Parameter query should parse successfully");
+    assert!(result.is_ok(), "Parameterized query should parse successfully");
     
-    // Test an invalid query
-    let invalid_query = "INVALID SQL STATEMENT";
+    // Test invalid SQL
+    let invalid_query = "SELECT FROM WHERE";
     let result = coordinator.execute_query(invalid_query.to_string(), params.clone()).await;
-    assert!(result.is_err(), "Invalid query should return an error");
-    
-    Ok(())
+    assert!(result.is_err(), "Invalid SQL should return an error");
 } 

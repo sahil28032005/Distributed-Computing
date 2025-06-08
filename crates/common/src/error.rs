@@ -26,6 +26,9 @@ pub enum DatabaseError {
     #[error("SQL parsing error: {0}")]
     SqlParsing(String),
     
+    #[error("SQL parsing error: {0}")]
+    SqlParse(String),
+    
     #[error("Configuration error: {0}")]
     Config(String),
     

@@ -12,3 +12,7 @@ prost = "0.13.5"
 tokio = { version = "1.45.0", features = ["full"] } # match rpc
 rpc = { path = "../rpc" }
 common = { path = "../common" }  # For error types
+sql_parser = { path = "../sql_parser" }
+
+[dev-dependencies]
+tokio-test = "0.4"
